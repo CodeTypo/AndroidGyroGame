@@ -28,7 +28,7 @@ public class Obstacle implements GameObject {
         rectangle2 = new Rect(startX + playerGap, startY, Constants.SCREEN_WIDTH, startY+rectHeight);
     }
 
-    public boolean playerCollide(RectPlayer player){
+    public boolean playerCollide(PlayerModel player){
         return Rect.intersects(rectangle, player.getRectangle()) || Rect.intersects(rectangle2, player.getRectangle());
     }
     

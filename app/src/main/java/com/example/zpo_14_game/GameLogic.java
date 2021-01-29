@@ -5,77 +5,57 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.view.MotionEvent;
 
-public class GameScene {
+/**
+ * A class that contains most of the game backend logic
+ */
+public class GameLogic {
+    
+    //An object representing the interactive player model / hitbox
+    private final PlayerModel player;
 
-    private final Rect r = new Rect();
+    //An object representing the player location on the screen
+    private final Point playerPoint;
 
-    private final RectPlayer player;
-    private Point playerPoint;
-    private ObstacleManager obstacleManager;
+    //A class that handles managing the obstacles
+    private final ObstacleManager obstacleManager;
 
-    private boolean movingPlayer = false;
-
+    //a boolean that indicates if the game is over
     private boolean gameOver = false;
-    private long gameOverTime;
 
+    //A class responsible for handling the steering with sensors
     private final SensorSteering sensorSteering;
+
     private long frameTime;
 
-    public GameScene() {
-        player = new RectPlayer(new Rect(100, 100, 200, 200));
+    public GameLogic() {
+        //Creating a new player hitbox
+        player      = new PlayerModel(new Rect(100, 100, 200, 200));
+        //Creating a new point responsible for handling the player's position on the screen
         playerPoint = new Point(Constants.SCREEN_WIDTH/2, 3*Constants.SCREEN_HEIGHT/4);
+        //synchronising the player hitbox with its position
         player.update(playerPoint);
+        //Creating a new instance of Obstacle Manager class and setting its base parameters
+        obstacleManager = new ObstacleManager(Constants.PLAYER_GAP,
+                                    Constants.DISTANCE_BETWEEN_OBSTACLES,
+                                    Constants.OBSTACLES_HEIGHT,
+                                    Constants.OBSTACLE_COLOR);
 
-        obstacleManager = new ObstacleManager(300, 650, 75, Color.BLACK);
-
+        //Creating a new SensorSteering class and calling its register method to register sensors.
         sensorSteering = new SensorSteering();
         sensorSteering.register();
+
+        //Setting frame time to the current system time in ms
         frameTime = System.currentTimeMillis();
     }
 
-    public void reset() {
-        playerPoint = new Point(Constants.SCREEN_WIDTH/2, 3*Constants.SCREEN_HEIGHT/4);
-        player.update(playerPoint);
-        obstacleManager = new ObstacleManager(200, 350, 75, Color.BLACK);
-        movingPlayer = false;
-    }
-
-
-    public void terminate() {
-        SceneManager.ACTIVE_SCENE = 0;
-    }
-
-
-    public void receiveTouch(MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                if(!gameOver && player.getRectangle().contains((int)event.getX(), (int)event.getY()))
-                    movingPlayer = true;
-                if(gameOver && System.currentTimeMillis() - gameOverTime >= 2000) {
-                    reset();
-                    gameOver = false;
-                    sensorSteering.newGame();
-                }
-                break;
-            case MotionEvent.ACTION_MOVE:
-                if(!gameOver && movingPlayer)
-                    playerPoint.set((int)event.getX(), (int)event.getY());
-                break;
-            case MotionEvent.ACTION_UP:
-                movingPlayer = false;
-                break;
-        }
-    }
-
-
+    //A method that draws everything at the beginning of the game
     public void draw(Canvas canvas) {
-        canvas.drawColor(Color.WHITE);
-
+        canvas.drawColor(Color.BLACK);
         player.draw(canvas);
         obstacleManager.draw(canvas);
 
+        //If game is over, displays a text message
         if(gameOver) {
             Paint paint = new Paint();
             paint.setTextSize(100);
@@ -84,10 +64,10 @@ public class GameScene {
         }
     }
 
-
+    //A method responsible for updating everything on the screen every frametime
     public void update() {
-        if(!gameOver) {
-            if(frameTime < Constants.INIT_TIME)
+        if(!gameOver) {     //If the game is not over yet
+            if(frameTime < Constants.INIT_TIME)     //And the initialisation time has come
                 frameTime = Constants.INIT_TIME;
             int elapsedTime = (int)(System.currentTimeMillis() - frameTime);
             frameTime = System.currentTimeMillis();
@@ -116,12 +96,13 @@ public class GameScene {
 
             if(obstacleManager.playerCollide(player)) {
                 gameOver = true;
-                gameOverTime = System.currentTimeMillis();
             }
         }
     }
 
+    //Drawing the Game Over message
     private void drawCenterText(Canvas canvas, Paint paint) {
+        final Rect r = new Rect();
         paint.setTextAlign(Paint.Align.LEFT);
         canvas.getClipBounds(r);
         int cHeight = r.height();

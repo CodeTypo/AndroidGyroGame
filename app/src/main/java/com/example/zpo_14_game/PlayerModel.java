@@ -7,8 +7,10 @@ import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.Rect;
 
-
-public class RectPlayer implements GameObject {
+/**
+ * A class responsible
+ */
+public class PlayerModel implements GameObject {
 
     private final Rect rectangle;
 
@@ -18,7 +20,7 @@ public class RectPlayer implements GameObject {
         return rectangle;
     }
 
-    public RectPlayer(Rect rectangle) {
+    public PlayerModel(Rect rectangle) {
         this.rectangle = rectangle;
 
         Bitmap idleImg = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.alienblue);
@@ -41,9 +43,6 @@ public class RectPlayer implements GameObject {
 
     @Override
     public void draw(Canvas canvas) {
-        //Paint paint = new Paint();
-        //paint.setColor(color);
-        //canvas.drawRect(rectangle, paint);
         animManager.draw(canvas, rectangle);
     }
 
@@ -63,7 +62,7 @@ public class RectPlayer implements GameObject {
         else if(rectangle.left - oldLeft < -5)
             state = 2;
 
-        animManager.playAnim(state);
+        animManager.runAnim(state);
         animManager.update();
     }
 }

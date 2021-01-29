@@ -32,7 +32,7 @@ import java.util.ArrayList;
             populateObstacles();
         }
 
-        public boolean playerCollide(RectPlayer player) {
+        public boolean playerCollide(PlayerModel player) {
             for(Obstacle ob : obstacles) {
                 if(ob.playerCollide(player))
                     return true;

@@ -29,6 +29,7 @@ public class MainActivity extends Activity {
         getWindowManager().getDefaultDisplay().getRealMetrics(dm);
         Constants.SCREEN_WIDTH  = dm.widthPixels;
         Constants.SCREEN_HEIGHT = dm.heightPixels;
+        Constants.DISTANCE_BETWEEN_OBSTACLES = dm.heightPixels/3;
 
         //Set the content view to the new instance of GamePanel class - a custom SurfaceView class
         setContentView(new GameView(this));

@@ -1,9 +1,7 @@
 package com.example.zpo_14_game;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -49,13 +47,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             } catch(Exception e) {e.printStackTrace();}
             retry = false;
         }
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        manager.receiveTouch(event);
-        return true;
     }
 
     public void update() {
