@@ -6,12 +6,12 @@ import android.view.MotionEvent;
 import java.util.ArrayList;
 
 public class SceneManager {
-    private final ArrayList<Scene> scenes = new ArrayList<>();
+    private final ArrayList<GameScene> scenes = new ArrayList<>();
     public static int ACTIVE_SCENE;
 
     public SceneManager(){
         ACTIVE_SCENE = 0;
-        scenes.add(new GameplayScene());
+        scenes.add(new GameScene());
     }
 
     public void receiveTouch(MotionEvent event) {

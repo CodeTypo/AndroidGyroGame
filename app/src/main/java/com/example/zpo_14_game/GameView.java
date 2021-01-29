@@ -1,17 +1,18 @@
 package com.example.zpo_14_game;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
+public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private MainThread thread;
 
     private final SceneManager manager;
 
-    public GamePanel(Context context) {
+    public GameView(Context context) {
         super(context);
 
         getHolder().addCallback(this);
@@ -50,13 +51,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-
         manager.receiveTouch(event);
-
         return true;
-        //return super.onTouchEvent(event);
     }
 
     public void update() {

@@ -11,21 +11,21 @@ import android.view.SurfaceHolder;
  */
 public class MainThread extends Thread {
 
-    public static final int MAX_FPS = 30;
+    public static final int MAX_FPS = 60;
     public static Canvas canvas;
 
     private final SurfaceHolder   surfaceHolder;
     private boolean               running;
-    private final GamePanel             gamePanel;
+    private final GameView gameView;
 
     public void setRunning(boolean running) {
         this.running = running;
     }
 
-    public MainThread (SurfaceHolder surfaceHolder, GamePanel gamePanel){
+    public MainThread (SurfaceHolder surfaceHolder, GameView gameView){
         super();
         this.surfaceHolder = surfaceHolder;
-        this.gamePanel = gamePanel;
+        this.gameView = gameView;
     }
 
     @Override
@@ -48,8 +48,8 @@ public class MainThread extends Thread {
 
                 synchronized (surfaceHolder){
 
-                    this.gamePanel.update();
-                    this.gamePanel.draw(canvas);
+                    this.gameView.update();
+                    this.gameView.draw(canvas);
 
                 }
 

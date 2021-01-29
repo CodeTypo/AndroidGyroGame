@@ -7,7 +7,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.view.MotionEvent;
 
-public class GameplayScene implements Scene {
+public class GameScene {
 
     private final Rect r = new Rect();
 
@@ -20,18 +20,18 @@ public class GameplayScene implements Scene {
     private boolean gameOver = false;
     private long gameOverTime;
 
-    private final OrientationData orientationData;
+    private final SensorSteering sensorSteering;
     private long frameTime;
 
-    public GameplayScene() {
+    public GameScene() {
         player = new RectPlayer(new Rect(100, 100, 200, 200));
         playerPoint = new Point(Constants.SCREEN_WIDTH/2, 3*Constants.SCREEN_HEIGHT/4);
         player.update(playerPoint);
 
-        obstacleManager = new ObstacleManager(200, 350, 75, Color.BLACK);
+        obstacleManager = new ObstacleManager(300, 650, 75, Color.BLACK);
 
-        orientationData = new OrientationData();
-        orientationData.register();
+        sensorSteering = new SensorSteering();
+        sensorSteering.register();
         frameTime = System.currentTimeMillis();
     }
 
@@ -42,12 +42,12 @@ public class GameplayScene implements Scene {
         movingPlayer = false;
     }
 
-    @Override
+
     public void terminate() {
         SceneManager.ACTIVE_SCENE = 0;
     }
 
-    @Override
+
     public void receiveTouch(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -56,7 +56,7 @@ public class GameplayScene implements Scene {
                 if(gameOver && System.currentTimeMillis() - gameOverTime >= 2000) {
                     reset();
                     gameOver = false;
-                    orientationData.newGame();
+                    sensorSteering.newGame();
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -69,7 +69,7 @@ public class GameplayScene implements Scene {
         }
     }
 
-    @Override
+
     public void draw(Canvas canvas) {
         canvas.drawColor(Color.WHITE);
 
@@ -84,16 +84,16 @@ public class GameplayScene implements Scene {
         }
     }
 
-    @Override
+
     public void update() {
         if(!gameOver) {
             if(frameTime < Constants.INIT_TIME)
                 frameTime = Constants.INIT_TIME;
             int elapsedTime = (int)(System.currentTimeMillis() - frameTime);
             frameTime = System.currentTimeMillis();
-            if(orientationData.getOrientation() != null && orientationData.getStartOrientation() != null) {
-                float pitch = orientationData.getOrientation()[1] - orientationData.getStartOrientation()[1];
-                float roll = orientationData.getOrientation()[2] - orientationData.getStartOrientation()[2];
+            if(sensorSteering.getOrientation() != null && sensorSteering.getStartOrientation() != null) {
+                float pitch = sensorSteering.getOrientation()[1] - sensorSteering.getStartOrientation()[1];
+                float roll = sensorSteering.getOrientation()[2] - sensorSteering.getStartOrientation()[2];
 
                 float xSpeed = 2 * roll * Constants.SCREEN_WIDTH/1000f;
                 float ySpeed = pitch * Constants.SCREEN_HEIGHT/1000f;

@@ -30,7 +30,7 @@ public class MainActivity extends Activity {
         Constants.SCREEN_WIDTH  = dm.widthPixels;
         Constants.SCREEN_HEIGHT = dm.heightPixels;
 
-        //Set the content view to the new instance of GamePanel class
-        setContentView(new GamePanel(this));
+        //Set the content view to the new instance of GamePanel class - a custom SurfaceView class
+        setContentView(new GameView(this));
     }
 }

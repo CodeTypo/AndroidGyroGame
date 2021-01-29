@@ -21,10 +21,10 @@ public class RectPlayer implements GameObject {
     public RectPlayer(Rect rectangle) {
         this.rectangle = rectangle;
 
-        BitmapFactory bf = new BitmapFactory();
         Bitmap idleImg = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.alienblue);
         Bitmap walk1 = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.alienblue_walk1);
         Bitmap walk2 = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.alienblue_walk2);
+
 
         Animation idle = new Animation(new Bitmap[]{idleImg}, 2);
         Animation walkRight = new Animation(new Bitmap[]{walk1, walk2}, 0.5f);
