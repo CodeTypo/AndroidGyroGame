@@ -7,11 +7,11 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
 public class SensorSteering implements SensorEventListener {
-    private final SensorManager manager;
+    private final SensorManager sensorManager;
     private final Sensor accelerometer;
-    private final Sensor magnometer;
+    private final Sensor magFieldSensor;
 
-    private float[] accelOutput;
+    private float[] accelerations;
     private float[] magOutput;
 
     private final float[] orientation = new float[3];
@@ -23,19 +23,16 @@ public class SensorSteering implements SensorEventListener {
     public float[] getStartOrientation() {
         return startOrientation;
     }
-    public void newGame() {
-        startOrientation = null;
-    }
 
     public SensorSteering() {
-        manager = (SensorManager)Constants.CURRENT_CONTEXT.getSystemService(Context.SENSOR_SERVICE);
-        accelerometer = manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        magnometer = manager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        sensorManager = (SensorManager)Constants.CURRENT_CONTEXT.getSystemService(Context.SENSOR_SERVICE);
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        magFieldSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
     }
 
     public void register() {
-        manager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
-        manager.registerListener(this, magnometer, SensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(this, magFieldSensor, SensorManager.SENSOR_DELAY_GAME);
     }
 
     @Override
@@ -46,13 +43,13 @@ public class SensorSteering implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
         if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
-            accelOutput = event.values;
+            accelerations = event.values;
         else if(event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
             magOutput = event.values;
-        if(accelOutput != null && magOutput != null) {
+        if(accelerations != null && magOutput != null) {
             float[] R = new float[9];
             float[] I = new float[9];
-            boolean success = SensorManager.getRotationMatrix(R, I, accelOutput, magOutput);
+            boolean success = SensorManager.getRotationMatrix(R, I, accelerations, magOutput);
             if(success) {
                 SensorManager.getOrientation(R, orientation);
                 if(startOrientation == null) {

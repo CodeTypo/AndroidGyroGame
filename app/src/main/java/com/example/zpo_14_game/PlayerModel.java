@@ -23,13 +23,23 @@ public class PlayerModel implements GameObject {
     public PlayerModel(Rect rectangle) {
         this.rectangle = rectangle;
 
-        Bitmap idleImg = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.alienblue);
-        Bitmap walk1 = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.alienblue_walk1);
-        Bitmap walk2 = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.alienblue_walk2);
+//        Bitmap idleImg = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.alienblue);
+//        Bitmap walk1 = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.alienblue_walk1);
+//        Bitmap walk2 = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.alienblue_walk2);
 
+
+        Bitmap idleImg = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.zombie_idle);
+        Bitmap walk1 = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.zombie_walk1);
+        Bitmap walk2 = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.zombie_walk2);
+        Bitmap climb1 = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.zombie_climb1);
+        Bitmap climb2 = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.zombie_climb2);
+        Bitmap fall1 = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.zombie_fall1);
+        Bitmap fall2 = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.zombie_fall2);
 
         Animation idle = new Animation(new Bitmap[]{idleImg}, 2);
         Animation walkRight = new Animation(new Bitmap[]{walk1, walk2}, 0.5f);
+        Animation climb = new Animation(new Bitmap[]{climb1, climb2}, 0.5f);
+        Animation fall = new Animation(new Bitmap[]{fall1, fall2}, 0.5f);
 
         Matrix m = new Matrix();
         m.preScale(-1, 1);
@@ -38,7 +48,7 @@ public class PlayerModel implements GameObject {
 
         Animation walkLeft = new Animation(new Bitmap[]{walk1, walk2}, 0.5f);
 
-        animManager = new AnimationManager(new Animation[]{idle, walkRight, walkLeft});
+        animManager = new AnimationManager(new Animation[]{idle, walkRight, walkLeft,climb,fall});
     }
 
     @Override
@@ -53,6 +63,7 @@ public class PlayerModel implements GameObject {
 
     public void update(Point point) {
         float oldLeft = rectangle.left;
+        float oldTop = rectangle.top;
 
         rectangle.set(point.x - rectangle.width()/2, point.y - rectangle.height()/2, point.x + rectangle.width()/2, point.y + rectangle.height()/2);
 
@@ -61,6 +72,10 @@ public class PlayerModel implements GameObject {
             state = 1;
         else if(rectangle.left - oldLeft < -5)
             state = 2;
+        else if(rectangle.top - oldTop < 5)
+            state = 3;
+        else if(rectangle.top - oldTop > 5)
+            state = 4;
 
         animManager.runAnim(state);
         animManager.update();

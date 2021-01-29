@@ -1,5 +1,6 @@
 package com.example.zpo_14_game;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 
@@ -18,7 +19,7 @@ public class Constants {
     public static int OBSTACLE_COLOR = Color.RED ;
 
     //Application context
+    @SuppressLint("StaticFieldLeak")
     public static Context CURRENT_CONTEXT;
-
     public static long INIT_TIME;
 }

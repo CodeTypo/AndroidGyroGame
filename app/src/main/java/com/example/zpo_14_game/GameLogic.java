@@ -38,8 +38,7 @@ public class GameLogic {
         //Creating a new instance of Obstacle Manager class and setting its base parameters
         obstacleManager = new ObstacleManager(Constants.PLAYER_GAP,
                                     Constants.DISTANCE_BETWEEN_OBSTACLES,
-                                    Constants.OBSTACLES_HEIGHT,
-                                    Constants.OBSTACLE_COLOR);
+                                    Constants.OBSTACLES_HEIGHT);
 
         //Creating a new SensorSteering class and calling its register method to register sensors.
         sensorSteering = new SensorSteering();
@@ -69,19 +68,20 @@ public class GameLogic {
         if(!gameOver) {     //If the game is not over yet
             if(frameTime < Constants.INIT_TIME)     //And the initialisation time has come
                 frameTime = Constants.INIT_TIME;
-            int elapsedTime = (int)(System.currentTimeMillis() - frameTime);
+            int timePassed = (int)(System.currentTimeMillis() - frameTime);
             frameTime = System.currentTimeMillis();
             if(sensorSteering.getOrientation() != null && sensorSteering.getStartOrientation() != null) {
-                float pitch = sensorSteering.getOrientation()[1] - sensorSteering.getStartOrientation()[1];
-                float roll = sensorSteering.getOrientation()[2] - sensorSteering.getStartOrientation()[2];
+                float verticalMovement  = sensorSteering.getOrientation()[1] - sensorSteering.getStartOrientation()[1];
+                float sidewaysMovement  = sensorSteering.getOrientation()[2] - sensorSteering.getStartOrientation()[2];
 
-                float xSpeed = 2 * roll * Constants.SCREEN_WIDTH/1000f;
-                float ySpeed = pitch * Constants.SCREEN_HEIGHT/1000f;
+                float xSpeed = 3 * sidewaysMovement * Constants.SCREEN_WIDTH/1000f;
+                float ySpeed =     verticalMovement * Constants.SCREEN_HEIGHT/1000f;
 
-                playerPoint.x += Math.abs(xSpeed*elapsedTime) > 5 ? xSpeed*elapsedTime : 0;
-                playerPoint.y -= Math.abs(ySpeed*elapsedTime) > 5 ? ySpeed*elapsedTime : 0;
+                playerPoint.x += Math.abs(xSpeed*timePassed) > 5 ? xSpeed*timePassed : 0;
+                playerPoint.y -= Math.abs(ySpeed*timePassed) > 5 ? ySpeed*timePassed : 0;
             }
 
+            //The app is not allowing the user to go off the screen, everything happens in bounds
             if(playerPoint.x < 0)
                 playerPoint.x = 0;
             else if(playerPoint.x > Constants.SCREEN_WIDTH)
@@ -91,9 +91,11 @@ public class GameLogic {
             else if(playerPoint.y > Constants.SCREEN_HEIGHT)
                 playerPoint.y = Constants.SCREEN_HEIGHT;
 
+            //Updating the hitbox to follow the point
             player.update(playerPoint);
+            //updating the obstacles
             obstacleManager.update();
-
+            //If there is a collision the game is over
             if(obstacleManager.playerCollide(player)) {
                 gameOver = true;
             }
