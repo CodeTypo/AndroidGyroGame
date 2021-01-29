@@ -7,14 +7,14 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
 public class OrientationData implements SensorEventListener {
-    private SensorManager manager;
-    private Sensor accelerometer;
-    private Sensor magnometer;
+    private final SensorManager manager;
+    private final Sensor accelerometer;
+    private final Sensor magnometer;
 
     private float[] accelOutput;
     private float[] magOutput;
 
-    private float[] orientation = new float[3];
+    private final float[] orientation = new float[3];
     public float[] getOrientation() {
         return orientation;
     }
@@ -36,10 +36,6 @@ public class OrientationData implements SensorEventListener {
     public void register() {
         manager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_GAME);
         manager.registerListener(this, magnometer, SensorManager.SENSOR_DELAY_GAME);
-    }
-
-    public void pause() {
-        manager.unregisterListener(this);
     }
 
     @Override

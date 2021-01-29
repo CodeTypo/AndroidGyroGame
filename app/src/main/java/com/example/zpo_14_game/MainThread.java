@@ -15,9 +15,8 @@ public class MainThread extends Thread {
     public static Canvas canvas;
 
     private final SurfaceHolder   surfaceHolder;
-    private double                averageFPS;
     private boolean               running;
-    private GamePanel             gamePanel;
+    private final GamePanel             gamePanel;
 
     public void setRunning(boolean running) {
         this.running = running;
@@ -33,7 +32,7 @@ public class MainThread extends Thread {
     public void run(){
         long startTime;
         long waitTime;
-        long timeMilis  = 1000/MAX_FPS;
+        long timeMilis;
         long targetTime = 1000/MAX_FPS;
         long totalTime  = 0;
         int frameCount  = 0;
@@ -71,7 +70,7 @@ public class MainThread extends Thread {
 
             try{
                 if(waitTime > 0)
-                    this.sleep(waitTime);
+                    sleep(waitTime);
             } catch (Exception e){
                 e.printStackTrace();
             }
@@ -80,7 +79,7 @@ public class MainThread extends Thread {
             frameCount ++;
 
             if(frameCount == MAX_FPS){
-                averageFPS = 1000/((totalTime/frameCount)/1000000);
+                double averageFPS = 1000 / ((totalTime / frameCount) / 1000000);
                 frameCount = 0;
                 totalTime = 0;
                 Log.d("GAMEDEBUG", String.valueOf(averageFPS));

@@ -5,8 +5,8 @@ import android.view.MotionEvent;
 
 public interface Scene {
 
-    public void update();
-    public void draw(Canvas canvas);
-    public void terminate();
-    public void receiveTouch(MotionEvent event);
+    void update();
+    void draw(Canvas canvas);
+    void terminate();
+    void receiveTouch(MotionEvent event);
 }

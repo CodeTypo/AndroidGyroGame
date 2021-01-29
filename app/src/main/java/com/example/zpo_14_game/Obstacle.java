@@ -4,13 +4,11 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-import java.net.ConnectException;
-
 public class Obstacle implements GameObject {
 
-    private Rect rectangle;
-    private Rect rectangle2;
-    private int color;
+    private final Rect rectangle;
+    private final Rect rectangle2;
+    private final int color;
 
     public Rect getRectangle() {
         return rectangle;

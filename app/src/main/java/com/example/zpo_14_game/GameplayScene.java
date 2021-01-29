@@ -9,9 +9,9 @@ import android.view.MotionEvent;
 
 public class GameplayScene implements Scene {
 
-    private Rect r = new Rect();
+    private final Rect r = new Rect();
 
-    private RectPlayer player;
+    private final RectPlayer player;
     private Point playerPoint;
     private ObstacleManager obstacleManager;
 
@@ -20,11 +20,11 @@ public class GameplayScene implements Scene {
     private boolean gameOver = false;
     private long gameOverTime;
 
-    private OrientationData orientationData;
+    private final OrientationData orientationData;
     private long frameTime;
 
     public GameplayScene() {
-        player = new RectPlayer(new Rect(100, 100, 200, 200), Color.rgb(255, 0, 0));
+        player = new RectPlayer(new Rect(100, 100, 200, 200));
         playerPoint = new Point(Constants.SCREEN_WIDTH/2, 3*Constants.SCREEN_HEIGHT/4);
         player.update(playerPoint);
 
@@ -80,7 +80,7 @@ public class GameplayScene implements Scene {
             Paint paint = new Paint();
             paint.setTextSize(100);
             paint.setColor(Color.MAGENTA);
-            drawCenterText(canvas, paint, "Game Over");
+            drawCenterText(canvas, paint);
         }
     }
 
@@ -121,14 +121,14 @@ public class GameplayScene implements Scene {
         }
     }
 
-    private void drawCenterText(Canvas canvas, Paint paint, String text) {
+    private void drawCenterText(Canvas canvas, Paint paint) {
         paint.setTextAlign(Paint.Align.LEFT);
         canvas.getClipBounds(r);
         int cHeight = r.height();
         int cWidth = r.width();
-        paint.getTextBounds(text, 0, text.length(), r);
+        paint.getTextBounds("Game Over", 0, "Game Over".length(), r);
         float x = cWidth / 2f - r.width() / 2f - r.left;
         float y = cHeight / 2f + r.height() / 2f - r.bottom;
-        canvas.drawText(text, x, y, paint);
+        canvas.drawText("Game Over", x, y, paint);
     }
 }
